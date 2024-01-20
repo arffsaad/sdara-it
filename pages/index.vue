@@ -1,5 +1,6 @@
 <template>
   <div>
-    <h1 class="text-red-300">Welcome to the homepage</h1>
+    <div class="w-screen h-screen bg-blue-500"></div>
+    <div class="w-screen h-screen bg-blue-300"></div>
   </div>
 </template>
