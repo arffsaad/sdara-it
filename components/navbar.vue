@@ -43,14 +43,4 @@ const toggleMenu = () => {
     menuOpen.value = !menuOpen.value;
 }
 
-// get pb authStore
-const { authStore } = await useAsyncData(async (nuxtApp) => {
-    // fetch and return all "example" records...
-    const auth = nuxtApp.$pb.authStore.loadFromCookie('pb_auth');;
-
-    return structuredClone(auth);
-})
-
-console.log(authStore);
-
 </script>
