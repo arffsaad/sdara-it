@@ -7,11 +7,9 @@
           <img src="/sdaralogo.png" class="max-w-full max-h-full px-4">
         </div>
         <div class="grid grid-cols-1 gap-y-4 z-20 w-full max-w-2xl"> <!-- Adjust max-width as needed -->
-          <h1 class="text-4xl font-semibold">SDARA IT CHAPTER</h1>
+          <h1 class="text-4xl font-semibold">ABOUT US</h1>
           <p>
-            Welcome to the SDARA IT Chapter. A place where IT Professionals and enthusiasts come together to harness
-            synergy
-            through knowledge and experiences.
+            Page in Construction. Stay tuned for more updates.
           </p>
         </div>
         <div class="grid grid-cols-1 gap-y-4 z-20 w-full max-w-2xl"> <!-- Adjust max-width as needed -->

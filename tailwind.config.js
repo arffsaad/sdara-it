@@ -9,6 +9,9 @@ module.exports = {
     "./error.vue",
   ],
   theme: {
+    fontFamily: {
+      sans: ['"Rubik"', 'sans-serif']
+    },
     extend: {
       transitionProperty: {
           'width': 'width'
