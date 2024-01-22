@@ -1,8 +1,8 @@
 <template>
     <div class="flex items-center justify-center h-screen w-screen">
         <div
-            class="w-full bg-slate-100 rounded-lg shadow-2xl grid grid-cols-2 gap-y-2 gap-x-2 px-12 py-8 mx-12 sm:mx-24 md:w-1/2 lg:w-1/2 xl:w-1/3">
-            <h1 class="text-xl uppercase col-span-2">Register</h1>
+            class="w-full bg-slate-100 rounded-lg shadow-2xl flex flex-col md:grid md:grid-cols-2 gap-y-2 gap-x-2 px-12 py-8 mx-12 sm:mx-24 md:w-1/2 lg:w-1/2 xl:w-1/3">
+            <h1 class="text-xl uppercase md:col-span-2">Register</h1>
             <input type="text" v-model="formData.firstName" placeholder="First Name" id="firstName" name="firstName"
                 class="border-2 border-slate-200 rounded-lg p-4 h-12" @change="v$.firstName.$touch" :class="{
                     'border-red-500 focus:border-red-500': v$.firstName.$error,
@@ -35,7 +35,7 @@
                     'border-[#42d392] ': !v$.passwordConfirm.$invalid,
                 }">
             <button @click="submitForm"
-                class="col-span-2 border-2 border-slate-200 bg-slate-700 rounded-lg w-1/4 h-12 hover:bg-slate-900 text-white">Register</button>
+                class="col-span-2 border-2 border-slate-200 bg-slate-700 rounded-lg w-1/2 md:w-1/3 h-12 hover:bg-slate-900 text-white">Register</button>
             <div class="flex col-span-2">
                 <div class="bg-slate-200 w-full h-1 mr-4 mt-2"></div>
                 <p class="text-center">or</p>
@@ -43,7 +43,7 @@
             </div>
             <div class="w-full flex flex-col col-span-2">
                 <NuxtLink to="/login" class="h-11 flex justify-center bg-white rounded-md border-2 border-black py-2">Sign
-                    in with Existing Account</NuxtLink>
+                    in</NuxtLink>
                 <!-- <a v-for="method in data.authProviders" :key="method.id"
                     class="h-11 flex mt-4 justify-center bg-white rounded-md border-2 border-black py-2"
                     :href="method.authUrl" target="_blank">

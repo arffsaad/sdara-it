@@ -14,7 +14,7 @@
                     'border-[#42d392] ': !v$.password.$invalid,
                 }">
             <button @click="submitForm"
-                class="login-button flex border-2 items-center justify-center border-slate-200 bg-slate-700 rounded-lg w-1/5 h-12 hover:bg-slate-900 text-white">
+                class="login-button flex border-2 items-center justify-center border-slate-200 bg-slate-700 rounded-lg w-1/2 md:w-1/3 h-12 hover:bg-slate-900 text-white">
                 <span class="spinner-button hidden">
                     <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none"
                         viewBox="0 0 24 24">
