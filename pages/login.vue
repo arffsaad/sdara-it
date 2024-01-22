@@ -98,7 +98,7 @@ async function submitForm() {
                 ).then((res) => {
                     if (res.code != 400) {
                         // redirect to home page
-                        nuxtApp.$router.push('/');
+                        window.location.href = '/';
                     } 
                 })
             })

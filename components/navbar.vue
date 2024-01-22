@@ -7,9 +7,9 @@
         <div class="pl-6 *:pr-10 *:uppercase *:text-sm w-full justify-start hidden md:flex">
             <NuxtLink to="/">Home</NuxtLink>
             <NuxtLink to="/about">About Us</NuxtLink>
-            <NuxtLink to="/login">Sign In</NuxtLink>
+            <NuxtLink to="/login" :class="(authed ? 'hidden' : '')">Sign In</NuxtLink>
             <a href="/">Members List</a>
-            <a href="/" class="ml-auto hidden">Hi {{ }}</a>
+            <a href="/" :class="'ml-auto ' + (authed ? '' : 'hidden')">Hi {{ useCookie("pb_auth").value?.model?.firstName }}!</a>
         </div>
     </div>
 
@@ -37,10 +37,18 @@
 <script setup lang="js">
 // create state "menuOpen"
 const menuOpen = useState('toggleMenu', () => false);
+const authed = useState('auth', () => false);
 
 // create function "toggleMenu"
 const toggleMenu = () => {
     menuOpen.value = !menuOpen.value;
+}
+
+const cookie = useCookie("pb_auth")
+if (cookie?.value?.model) {
+    authed.value = true
+} else {
+    authed.value = false
 }
 
 </script>
