@@ -1,6 +1,6 @@
 <template>
     <div class="flex items-center justify-center h-screen w-screen">
-        <div
+        <form @submit.prevent="submitForm"
             class="w-full bg-slate-100 rounded-lg shadow-2xl grid grid-cols-1 gap-y-2 px-12 py-8 mx-12 sm:mx-24 md:w-1/2 lg:w-1/2 xl:w-1/3">
             <h1 class="text-xl uppercase">Login</h1>
             <input type="text" v-model="formData.identity" placeholder="Username or Email" id="identity" name="identity"
@@ -13,7 +13,7 @@
                     'border-red-500 focus:border-red-500': v$.password.$error,
                     'border-[#42d392] ': !v$.password.$invalid,
                 }">
-            <button @click="submitForm"
+            <button @click.stop="submitForm"
                 class="login-button flex border-2 items-center justify-center border-slate-200 bg-slate-700 rounded-lg w-1/2 md:w-1/3 h-12 hover:bg-slate-900 text-white">
                 <span class="spinner-button hidden">
                     <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none"
@@ -39,13 +39,17 @@
                     Sign in with {{ capitalize(method.name) }}
                 </a> -->
             </div>
-        </div>
+        </form>
     </div>
 </template>
 
 <script setup>
 import { required, minLength } from '@vuelidate/validators';
 import { useVuelidate } from '@vuelidate/core';
+
+useHead({
+  title: 'SDARA IT | Login',
+});
 
 function capitalize(str) {
     return str.charAt(0).toUpperCase() + str.slice(1);
@@ -86,6 +90,8 @@ function spinnerEnd() {
 }
 
 async function submitForm() {
+    // prevent default form submission
+    event.preventDefault();
     v$.value.$validate();
     if (!v$.value.$error) {
         spinner();

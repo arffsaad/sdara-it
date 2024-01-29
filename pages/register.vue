@@ -58,6 +58,10 @@
 import { required, email, sameAs, minLength } from '@vuelidate/validators';
 import { useVuelidate } from '@vuelidate/core';
 
+useHead({
+  title: 'SDARA IT | Register',
+});
+
 function capitalize(str) {
     return str.charAt(0).toUpperCase() + str.slice(1);
 }

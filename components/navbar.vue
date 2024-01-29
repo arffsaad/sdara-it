@@ -8,7 +8,7 @@
       <NuxtLink to="/">Home</NuxtLink>
       <NuxtLink to="/about">About Us</NuxtLink>
       <NuxtLink to="/login" :class="(authed ? 'hidden' : '')">Sign In</NuxtLink>
-      <a href="#">Members List</a>
+      <a href="#" :class="(authed ? '' : 'hidden')">Members List</a>
       <div :class="'flex ml-auto ' + (authed ? '' : 'hidden')">
         <a href="#" class="mr-4">Hi {{ useCookie("pb_auth").value?.model?.firstName
         }}!</a>
@@ -61,7 +61,7 @@ const logout = async () => {
     // fetch and return all "example" records...
     nuxtApp.$pb.authStore.clear()
   })
-  if (menuOpen) {
+  if (menuOpen.value) {
     toggleMenu();
   }
 };

@@ -31,4 +31,8 @@
 useHead({
   title: 'SDARA IT | Home',
 });
+
+// definePageMeta({
+//   middleware: 'auth'
+// })
 </script>
