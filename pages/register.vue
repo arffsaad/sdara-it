@@ -29,8 +29,8 @@
                     'border-[#42d392] ': !v$.password.$invalid,
                 }">
             <input type="password" v-model="formData.passwordConfirm" placeholder="Confirm Password" id="passwordConfirm"
-                name="passwordConfirm" class="border-2 border-slate-200 rounded-lg p-4 h-12" @change="v$.passwordConfirm.$touch"
-                :class="{
+                name="passwordConfirm" class="border-2 border-slate-200 rounded-lg p-4 h-12"
+                @change="v$.passwordConfirm.$touch" :class="{
                     'border-red-500 focus:border-red-500': v$.passwordConfirm.$error,
                     'border-[#42d392] ': !v$.passwordConfirm.$invalid,
                 }">
@@ -44,11 +44,11 @@
             <div class="w-full flex flex-col col-span-2">
                 <NuxtLink to="/login" class="h-11 flex justify-center bg-white rounded-md border-2 border-black py-2">Sign
                     in</NuxtLink>
-                <!-- <a v-for="method in data.authProviders" :key="method.id"
-                    class="h-11 flex mt-4 justify-center bg-white rounded-md border-2 border-black py-2"
-                    :href="method.authUrl" target="_blank">
+                <a v-for="method in data.authProviders" :key="method.id"
+                    class="h-11 flex mt-4 justify-center bg-white rounded-md border-2 border-black py-2 cursor-pointer"
+                    @click="oauth(method.name)" target="_blank">
                     Sign in with {{ capitalize(method.name) }}
-                </a> -->
+                </a>
             </div>
         </div>
     </div>
@@ -59,7 +59,7 @@ import { required, email, sameAs, minLength } from '@vuelidate/validators';
 import { useVuelidate } from '@vuelidate/core';
 
 useHead({
-  title: 'SDARA IT | Register',
+    title: 'SDARA IT | Register',
 });
 
 function capitalize(str) {
@@ -93,6 +93,30 @@ const rules = computed(() => {
 });
 
 const v$ = useVuelidate(rules, formData);
+
+async function oauth(method) {
+    await useAsyncData(async (nuxtApp) => {
+        try {
+            await nuxtApp.$pb.collection('users').authWithOAuth2({ provider: method }).then((res) => {
+                const username = res.meta.email.split('@')[0];
+                const data = {
+                    "username": username,
+                    "firstName": res.meta.rawUser.given_name,
+                    "lastName": res.meta.rawUser.family_name,
+                };
+                nuxtApp.$pb.collection('users').update(res.record.id, data);
+                nuxtApp.$router.push('/');
+            })
+        } catch {
+            // pending, no toast added added in this page.
+            // open.value = false
+            // window.clearTimeout(timerRef.value)
+            // timerRef.value = window.setTimeout(() => {
+            //     open.value = true
+            // }, 100)
+        }
+    })
+}
 
 async function submitForm() {
     v$.value.$validate();

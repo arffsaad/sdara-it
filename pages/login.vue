@@ -33,11 +33,11 @@
             <div class="w-full flex flex-col">
                 <NuxtLink to="/register" class="h-11 flex justify-center bg-white rounded-md border-2 border-black py-2">
                     Register new Account</NuxtLink>
-                <!-- <a v-for="method in data.authProviders" :key="method.id"
-                    class="h-11 flex mt-4 justify-center bg-white rounded-md border-2 border-black py-2"
-                    :href="method.authUrl" target="_blank">
+                <a v-for="method in data.authProviders" :key="method.id"
+                    class="h-11 flex mt-4 justify-center bg-white rounded-md border-2 border-black py-2 cursor-pointer"
+                    @click="oauth(method.name)" target="_blank">
                     Sign in with {{ capitalize(method.name) }}
-                </a> -->
+                </a>
             </div>
         </form>
     </div>
@@ -104,6 +104,28 @@ function spinnerEnd() {
     loginButton.classList.disabled = false;
 }
 
+async function oauth(method) {
+    await useAsyncData(async (nuxtApp) => {
+        try {
+            await nuxtApp.$pb.collection('users').authWithOAuth2({ provider: method }).then((res) => {
+                const username = res.meta.email.split('@')[0];
+                const data = {
+                    "username": username,
+                    "firstName": res.meta.rawUser.given_name,
+                    "lastName": res.meta.rawUser.family_name,
+                };
+                nuxtApp.$pb.collection('users').update(res.record.id, data);
+                nuxtApp.$router.push('/');
+            })
+        } catch {
+            open.value = false
+            window.clearTimeout(timerRef.value)
+            timerRef.value = window.setTimeout(() => {
+                open.value = true
+            }, 100)
+        }
+    })
+}
 async function submitForm() {
     // prevent default form submission
     event.preventDefault();
@@ -118,7 +140,6 @@ async function submitForm() {
                 )
                 nuxtApp.$router.push('/');
             } catch (error) {
-                console.error('Error:', error);
                 open.value = false
                 window.clearTimeout(timerRef.value)
                 timerRef.value = window.setTimeout(() => {
