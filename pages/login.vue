@@ -41,6 +41,19 @@
             </div>
         </form>
     </div>
+    <ToastProvider>
+        <ToastRoot v-model:open="open"
+            class="bg-white rounded-md shadow-[hsl(206_22%_7%_/_35%)_0px_10px_38px_-10px,_hsl(206_22%_7%_/_20%)_0px_10px_20px_-15px] p-[15px] grid [grid-template-areas:_'title_action'_'description_action'] grid-cols-[auto_max-content] gap-x-[15px] items-center data-[state=open]:animate-slideIn data-[state=closed]:animate-hide data-[swipe=move]:translate-x-[var(--radix-toast-swipe-move-x)] data-[swipe=cancel]:translate-x-0 data-[swipe=cancel]:transition-[transform_200ms_ease-out] data-[swipe=end]:animate-swipeOut">
+            <ToastDescription as-child>
+                Invalid Credentials!
+            </ToastDescription>
+            <ToastClose aria-label="Close">
+                <span aria-hidden>×</span>
+            </ToastClose>
+        </ToastRoot>
+        <ToastViewport
+            class="[--viewport-padding:_20px] fixed bottom-0 right-0 flex flex-col p-[var(--viewport-padding)] gap-[10px] w-[390px] max-w-[100vw] m-0 list-none z-[2147483647] outline-none" />
+    </ToastProvider>
 </template>
 
 <script setup>
@@ -48,14 +61,16 @@ import { required, minLength } from '@vuelidate/validators';
 import { useVuelidate } from '@vuelidate/core';
 
 useHead({
-  title: 'SDARA IT | Login',
+    title: 'SDARA IT | Login',
 });
+
+const open = ref(false)
+const timerRef = ref(0)
 
 function capitalize(str) {
     return str.charAt(0).toUpperCase() + str.slice(1);
 }
 const { data } = await useAsyncData(async (nuxtApp) => {
-    // fetch and return all "example" records...
     const methods = await nuxtApp.$pb.collection('users').listAuthMethods();
 
     return structuredClone(methods);
@@ -95,22 +110,22 @@ async function submitForm() {
     v$.value.$validate();
     if (!v$.value.$error) {
         spinner();
-        try {
-            await useAsyncData(async (nuxtApp) => {
-                // fetch and return all "example" records...
+        await useAsyncData(async (nuxtApp) => {
+            try {
                 await nuxtApp.$pb.collection('users').authWithPassword(
                     formData.identity,
                     formData.password,
-                ).then((res) => {
-                    if (res.code != 400) {
-                        // redirect to home page
-                        nuxtApp.$router.push('/');
-                    } 
-                })
-            })
-        } catch (error) {
-            console.error('Error:', error);
-        }
+                )
+                nuxtApp.$router.push('/');
+            } catch (error) {
+                console.error('Error:', error);
+                open.value = false
+                window.clearTimeout(timerRef.value)
+                timerRef.value = window.setTimeout(() => {
+                    open.value = true
+                }, 100)
+            }
+        })
         spinnerEnd();
     }
 }
