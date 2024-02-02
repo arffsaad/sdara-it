@@ -8,7 +8,7 @@ export default defineNuxtConfig({
       autoprefixer: {},
     },
   },
-  modules: ['@nuxtjs/google-fonts', 'radix-vue/nuxt'],
+  modules: ['@nuxtjs/google-fonts', 'radix-vue/nuxt', '@nuxt/ui'],
   googleFonts: {
     families: {
       Rubik: {

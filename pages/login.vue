@@ -1,15 +1,15 @@
 <template>
-    <div class="flex items-center justify-center h-screen w-screen">
+    <div class="flex items-center justify-center h-screen w-screen bg-slate-100">
         <form @submit.prevent="submitForm"
             class="w-full bg-slate-100 rounded-lg shadow-2xl grid grid-cols-1 gap-y-2 px-12 py-8 mx-12 sm:mx-24 md:w-1/2 lg:w-1/2 xl:w-1/3">
             <h1 class="text-xl uppercase">Login</h1>
             <input type="text" v-model="formData.identity" placeholder="Username or Email" id="identity" name="identity"
-                class="border-2 border-slate-200 rounded-lg p-4 h-12" @change="v$.username.$touch" :class="{
+                class="border-2 border-slate-200 rounded-lg p-4 h-12 bg-white" @change="v$.username.$touch" :class="{
                     'border-red-500 focus:border-red-500': v$.identity.$error,
                     'border-[#42d392] ': !v$.identity.$invalid,
                 }">
             <input type="password" v-model="formData.password" placeholder="Password" id="password" name="password"
-                class="border-2 border-slate-200 rounded-lg p-4 h-12" @change="v$.password.$touch" :class="{
+                class="border-2 border-slate-200 rounded-lg p-4 h-12 bg-white" @change="v$.password.$touch" :class="{
                     'border-red-500 focus:border-red-500': v$.password.$error,
                     'border-[#42d392] ': !v$.password.$invalid,
                 }">
@@ -108,16 +108,38 @@ async function oauth(method) {
     await useAsyncData(async (nuxtApp) => {
         try {
             await nuxtApp.$pb.collection('users').authWithOAuth2({ provider: method }).then((res) => {
-                const username = res.meta.email.split('@')[0];
-                const data = {
-                    "username": username,
-                    "firstName": res.meta.rawUser.given_name,
-                    "lastName": res.meta.rawUser.family_name,
-                };
-                nuxtApp.$pb.collection('users').update(res.record.id, data);
+                if (res.meta.isNew) {
+                    const username = res.meta.email.split('@')[0];
+                    const fName = res.meta.rawUser.given_name;
+                    const lName = res.meta.rawUser.family_name;
+                    const image = res.meta.avatarUrl;
+                    const record = res.record.id;
+                    if (image != "" || image != null) {
+                        const data = new FormData();
+                        fetch(image).then((res) => {
+                            // get blob
+                            res.blob().then((imageBlob) => {
+                                data.append('avatar', imageBlob, 'avatar.jpg');
+                                data.append("username", username)
+                                data.append("firstName", fName)
+                                data.append("lastName", lName)
+                                data.append("fullName", fName + " " + lName)
+                                nuxtApp.$pb.collection('users').update(record, data);
+                            });
+                        });
+                    } else {
+                        const data = {
+                            "username": username,
+                            "firstName": fName,
+                            "lastName": lName,
+                            "fullName": fName + " " + lName
+                        };
+                        nuxtApp.$pb.collection('users').update(record, data);
+                    }
+                }
                 nuxtApp.$router.push('/');
             })
-        } catch {
+        } catch (error) {
             open.value = false
             window.clearTimeout(timerRef.value)
             timerRef.value = window.setTimeout(() => {

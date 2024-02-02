@@ -1,35 +1,35 @@
 <template>
-    <div class="flex items-center justify-center h-screen w-screen">
+    <div class="flex items-center justify-center h-screen w-screen bg-slate-100">
         <div
             class="w-full bg-slate-100 rounded-lg shadow-2xl flex flex-col md:grid md:grid-cols-2 gap-y-2 gap-x-2 px-12 py-8 mx-12 sm:mx-24 md:w-1/2 lg:w-1/2 xl:w-1/3">
             <h1 class="text-xl uppercase md:col-span-2">Register</h1>
             <input type="text" v-model="formData.firstName" placeholder="First Name" id="firstName" name="firstName"
-                class="border-2 border-slate-200 rounded-lg p-4 h-12" @change="v$.firstName.$touch" :class="{
+                class="border-2 border-slate-200 rounded-lg p-4 h-12 bg-white" @change="v$.firstName.$touch" :class="{
                     'border-red-500 focus:border-red-500': v$.firstName.$error,
                     'border-[#42d392] ': !v$.firstName.$invalid,
                 }">
             <input type="text" v-model="formData.lastName" placeholder="Last Name" id="lastName" name="lastName"
-                class="border-2 border-slate-200 rounded-lg p-4 h-12" @change="v$.lastName.$touch" :class="{
+                class="border-2 border-slate-200 rounded-lg p-4 h-12 bg-white" @change="v$.lastName.$touch" :class="{
                     'border-red-500 focus:border-red-500': v$.lastName.$error,
                     'border-[#42d392] ': !v$.lastName.$invalid,
                 }">
             <input type="text" v-model="formData.username" placeholder="Username" id="username" name="username"
-                class="border-2 border-slate-200 rounded-lg p-4 h-12" @change="v$.username.$touch" :class="{
+                class="border-2 border-slate-200 rounded-lg p-4 h-12 bg-white" @change="v$.username.$touch" :class="{
                     'border-red-500 focus:border-red-500': v$.username.$error,
                     'border-[#42d392] ': !v$.username.$invalid,
                 }">
             <input type="text" v-model="formData.email" placeholder="Email" id="email" name="email"
-                class="border-2 border-slate-200 rounded-lg p-4 h-12" @change="v$.email.$touch" :class="{
+                class="border-2 border-slate-200 rounded-lg p-4 h-12 bg-white" @change="v$.email.$touch" :class="{
                     'border-red-500 focus:border-red-500': v$.email.$error,
                     'border-[#42d392] ': !v$.email.$invalid,
                 }">
             <input type="password" v-model="formData.password" placeholder="Password" id="password" name="password"
-                class="border-2 border-slate-200 rounded-lg p-4 h-12" @change="v$.password.$touch" :class="{
+                class="border-2 border-slate-200 rounded-lg p-4 h-12 bg-white" @change="v$.password.$touch" :class="{
                     'border-red-500 focus:border-red-500': v$.password.$error,
                     'border-[#42d392] ': !v$.password.$invalid,
                 }">
             <input type="password" v-model="formData.passwordConfirm" placeholder="Confirm Password" id="passwordConfirm"
-                name="passwordConfirm" class="border-2 border-slate-200 rounded-lg p-4 h-12"
+                name="passwordConfirm" class="border-2 border-slate-200 rounded-lg p-4 h-12 bg-white"
                 @change="v$.passwordConfirm.$touch" :class="{
                     'border-red-500 focus:border-red-500': v$.passwordConfirm.$error,
                     'border-[#42d392] ': !v$.passwordConfirm.$invalid,

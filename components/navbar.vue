@@ -8,7 +8,7 @@
       <NuxtLink to="/">Home</NuxtLink>
       <NuxtLink to="/about">About Us</NuxtLink>
       <NuxtLink to="/login" :class="(authed ? 'hidden' : '')">Sign In</NuxtLink>
-      <a href="#" :class="(authed ? '' : 'hidden')">Members List</a>
+      <NuxtLink to="/members" :class="(authed ? '' : 'hidden')">Members List</NuxtLink>
       <div :class="'flex ml-auto ' + (authed ? '' : 'hidden')">
         <a href="#" class="mr-4">Hi {{ useCookie("pb_auth").value?.model?.firstName
         }}!</a>
@@ -33,7 +33,7 @@
         <NuxtLink @click="toggleMenu" to="/">Home</NuxtLink>
         <NuxtLink @click="toggleMenu" to="/about">About Us</NuxtLink>
         <NuxtLink :class="(authed ? 'hidden' : '')" @click="toggleMenu" to="/login">Sign In</NuxtLink>
-        <a href="#" :class="(authed ? '' : 'hidden')">Members List</a>
+        <NuxtLink :class="(authed ? '' : 'hidden')" @click="toggleMenu" to="/login">Members List</NuxtLink>
         <a href="#" :class="(authed ? '' : 'hidden')" @click="logout">Logout</a>
       </div>
     </div>
@@ -42,6 +42,7 @@
 
 <script setup lang="js">
 import { ref, watch } from 'vue';
+import { routerKey } from 'vue-router';
 
 // create state "menuOpen"
 const menuOpen = ref(false);
@@ -60,9 +61,11 @@ const logout = async () => {
   await useAsyncData(async (nuxtApp) => {
     // fetch and return all "example" records...
     nuxtApp.$pb.authStore.clear()
-  })
-  if (menuOpen.value) {
-    toggleMenu();
-  }
+  }).then(() => {
+    if (menuOpen.value) {
+      toggleMenu();
+    }
+    nuxtApp.$router.push("/login");
+  });
 };
 </script>
