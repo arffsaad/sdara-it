@@ -8,7 +8,7 @@
         </div>
         <h1 class="text-4xl font-semibold md:text-3xl text-black z-20">MEMBERS LIST</h1>
         <div class="z-20 w-full justify-items-center bg-slate-100 mt-4">
-          <Table :columns="columns" :people="people"></Table>
+          <Table :columns="columns" :people="rows" :loading="loading"></Table>
         </div>
       </div>
     </div>
@@ -19,6 +19,10 @@
 useHead({
   title: 'SDARA IT | Members List',
 });
+
+// ref for loading state
+const loading = ref(true);
+const rows = ref([]);
 
 const columns = [
   {
@@ -39,12 +43,13 @@ const columns = [
   },
 ];
 
-const people = await useAsyncData(async (nuxtApp) => {
-  const peopleList = await nuxtApp.$pb.collection('people').getList(1, 50, {
+await useLazyAsyncData(async (nuxtApp) => {
+  await nuxtApp.$pb.collection('people').getFullList({
     expand: ['user,skills,industries'],
     fields: ['*,expand.user.fullName,expand.user.email,expand.user.avatar,expand.skills.name,expand.industries.name']
   }).then((res) => {
-    return res.items;
+    rows.value = res;
+    loading.value = false;
   });
 })
 
