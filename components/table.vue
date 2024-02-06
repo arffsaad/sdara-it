@@ -1,16 +1,41 @@
 <script setup>
 
-// expose the columns and people to the template
-defineProps([
-    'columns',
-    'people',
-    'loading'
-])
+// ref for loading state
+const loading = ref(true);
+const people = ref([]);
 
+const columns = [
+  {
+    label: 'Name',
+    key: 'expand.user.fullName',
+  },
+  {
+    label: 'Nickname',
+    key: 'nickname',
+  },
+  {
+    label: 'Batch Year',
+    key: 'batch',
+  },
+  {
+    label: 'LinkedIn',
+    key: 'linkedin',
+  },
+];
+
+await useLazyAsyncData(async (nuxtApp) => {
+  await nuxtApp.$pb.collection('people').getFullList({
+    expand: ['user,skills,industries'],
+    fields: ['*,expand.user.fullName,expand.user.email,expand.user.avatar,expand.skills.name,expand.industries.name']
+  }).then((res) => {
+    people.value = res;
+    loading.value = false;
+  });
+})
 const page = ref(1)
-const pageCount = 1
+const pageCount = 10
 const rows = computed(() => {
-  return props.people.slice((page.value - 1) * pageCount, (page.value) * pageCount)
+  return people.value.slice((page.value - 1) * pageCount, (page.value) * pageCount)
 })
 
 </script>
