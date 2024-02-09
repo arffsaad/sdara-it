@@ -4,7 +4,7 @@
 const loading = ref(true);
 const people = ref([]);
 const page = ref(1)
-const pageCount = 1
+const pageCount = 10
 const totalItems = ref(people.value.length)
 const q = ref('');
 
@@ -16,6 +16,7 @@ const columns = [
   {
     label: 'Name',
     key: 'expand.user.fullName',
+    sortable: true,
   },
   {
     label: 'Nickname',
@@ -24,6 +25,7 @@ const columns = [
   {
     label: 'Batch Year',
     key: 'batch',
+    sortable: true
   },
   {
     label: 'LinkedIn',
@@ -34,7 +36,8 @@ const columns = [
 await useLazyAsyncData(async (nuxtApp) => {
   await nuxtApp.$pb.collection('people').getFullList({
     expand: ['user,skills,industries'],
-    fields: ['*,expand.user.fullName,expand.user.email,expand.user.avatar,expand.skills.name,expand.industries.name']
+    fields: ['*,expand.user.fullName,expand.user.email,expand.user.avatar,expand.skills.name,expand.industries.name'],
+    sort: 'expand.user.fullName',
   }).then((res) => {
     people.value = res;
     loading.value = false;
@@ -64,7 +67,7 @@ const filteredRows = computed(() => {
   <UTable :ui="{
     base: 'min-w-full table-fixed rounded-lg',
     th: {
-      color: 'text-black dark:text-black'
+      color: 'text-black dark:text-black font-semibold uppercase'
     },
     td: {
       color: 'text-black dark:text-black'
