@@ -4,6 +4,7 @@ export default defineNuxtRouteMiddleware((to) => {
   // Add auth protected routes here
   const mustAuth = [
     "/members",
+    "/profile"
   ]
 
   // Add routes that must not be authed here (login, register, etc.)

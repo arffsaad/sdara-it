@@ -44,7 +44,6 @@ await useLazyAsyncData(async (nuxtApp) => {
   //   loading.value = false;
   // });
   await nuxtApp.$pb.collection('people').getFullList({
-    filter: 'approved=true',
     expand: ['user,skills,industries'],
     fields: ['*,expand.user.fullName,expand.user.email,expand.user.avatar,expand.skills.name,expand.industries.name'],
   }).then((res) => {

@@ -98,22 +98,44 @@ async function oauth(method) {
     await useAsyncData(async (nuxtApp) => {
         try {
             await nuxtApp.$pb.collection('users').authWithOAuth2({ provider: method }).then((res) => {
-                const username = res.meta.email.split('@')[0];
-                const data = {
-                    "username": username,
-                    "firstName": res.meta.rawUser.given_name,
-                    "lastName": res.meta.rawUser.family_name,
-                };
-                nuxtApp.$pb.collection('users').update(res.record.id, data);
+                if (res.meta.isNew) {
+                    const username = res.meta.email.split('@')[0];
+                    const fName = res.meta.rawUser.given_name;
+                    const lName = res.meta.rawUser.family_name;
+                    const image = res.meta.avatarUrl;
+                    const record = res.record.id;
+                    if (image != "" || image != null) {
+                        const data = new FormData();
+                        fetch(image).then((res) => {
+                            // get blob
+                            res.blob().then((imageBlob) => {
+                                data.append('avatar', imageBlob, 'avatar.jpg');
+                                data.append("username", username)
+                                data.append("firstName", fName)
+                                data.append("lastName", lName)
+                                data.append("fullName", fName + " " + lName)
+                                nuxtApp.$pb.collection('users').update(record, data);
+                            });
+                        });
+                    } else {
+                        const data = {
+                            "username": username,
+                            "firstName": fName,
+                            "lastName": lName,
+                            "fullName": fName + " " + lName
+                        };
+                        nuxtApp.$pb.collection('users').update(record, data);
+                    }
+                    nuxtApp.$router.push('/profile');
+                }
                 nuxtApp.$router.push('/');
             })
-        } catch {
-            // pending, no toast added added in this page.
-            // open.value = false
-            // window.clearTimeout(timerRef.value)
-            // timerRef.value = window.setTimeout(() => {
-            //     open.value = true
-            // }, 100)
+        } catch (error) {
+            open.value = false
+            window.clearTimeout(timerRef.value)
+            timerRef.value = window.setTimeout(() => {
+                open.value = true
+            }, 100)
         }
     })
 }
