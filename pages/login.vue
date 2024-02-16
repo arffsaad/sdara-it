@@ -33,11 +33,13 @@
             <div class="w-full flex flex-col">
                 <NuxtLink to="/register" class="h-11 flex justify-center bg-white rounded-md border-2 border-black py-2">
                     Register new Account</NuxtLink>
+                <ClientOnly>
                 <a v-for="method in data.authProviders" :key="method.id"
                     class="h-11 flex mt-4 justify-center bg-white rounded-md border-2 border-black py-2 cursor-pointer"
                     @click="oauth(method.name)" target="_blank">
                     Sign in with {{ capitalize(method.name) }}
                 </a>
+                </ClientOnly>
             </div>
         </form>
     </div>

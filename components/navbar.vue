@@ -33,7 +33,7 @@
         <NuxtLink @click="toggleMenu" to="/">Home</NuxtLink>
         <NuxtLink @click="toggleMenu" to="/about">About Us</NuxtLink>
         <NuxtLink :class="(authed ? 'hidden' : '')" @click="toggleMenu" to="/login">Sign In</NuxtLink>
-        <NuxtLink :class="(authed ? '' : 'hidden')" @click="toggleMenu" to="/login">Members List</NuxtLink>
+        <NuxtLink :class="(authed ? '' : 'hidden')" @click="toggleMenu" to="/members">Members List</NuxtLink>
         <a href="#" :class="(authed ? '' : 'hidden')" @click="logout">Logout</a>
       </div>
     </div>
@@ -59,7 +59,6 @@ authed.value = Boolean(cookie.value?.model);
 
 const logout = async () => {
   await useAsyncData(async (nuxtApp) => {
-    // fetch and return all "example" records...
     nuxtApp.$pb.authStore.clear()
   }).then(() => {
     if (menuOpen.value) {
