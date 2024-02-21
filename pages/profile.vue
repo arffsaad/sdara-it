@@ -33,7 +33,7 @@
             </div>
             <div class="w-full grid grid-cols-1">
                 <h6 class="ml-4 mb-1">Skills</h6>
-                <div class='w-full flex flex-wrap'>
+                <div class='w-full flex flex-wrap p-1 md:overflow-y-scroll md:h-8 bg-slate-200 rounded-md no-scrollbar'>
                     <UBadge v-for="skill in selectedSkills" :key="skill.id" class="mr-2 mb-2 rounded-full" color="gray" variant="solid">
                         {{ skill.name.length > 7 ? skill.name.slice(0, 6) + '...' : skill.name }}&nbsp;&nbsp; 
                         <a href="#" @click="removeSkill(skill)">
@@ -41,7 +41,7 @@
                         </a>
                     </UBadge>
                 </div>
-                <USelectMenu class="ml-4 mt-2 w-1/3" v-model="selectedSkills" :options="skills" multiple placeholder="Skills" color="white" searchable searchable-placeholder="Search skill..." option-attribute="name">
+                <USelectMenu class="ml-4 mt-2 w-1/2 md:w-1/3" v-model="selectedSkills" :options="skills" multiple placeholder="Skills" color="white" searchable searchable-placeholder="Search skill..." option-attribute="name">
                     <template #label>
                         <span>Skills</span>
                     </template>
@@ -49,11 +49,14 @@
                         <span v-if="!selectedSkills.some(skill => skill.name.toLowerCase() === query.toLowerCase())" class="text-black cursor-pointer hover:underline" @click="createSkill(query)">Add <q>{{ query }}</q></span>
                         <span v-else>&nbsp;</span>
                     </template>
+                    <template #empty>
+                        Search or Add skill
+                    </template>
                 </USelectMenu>
             </div>
             <div class="w-full grid grid-cols-1">
                 <h6 class="ml-4 mb-1">Industries Worked In</h6>
-                <div class='w-full flex flex-wrap'>
+                <div class='w-full flex flex-wrap p-1 md:overflow-y-scroll md:h-8 bg-slate-200 rounded-md no-scrollbar'>
                     <UBadge v-for="industry in selectedIndustries" :key="industry.id" class="mr-2 mb-2 rounded-full" color="gray" variant="solid">
                         {{ industry.name.length > 12 ? industry.name.slice(0, 6) + '...' : industry.name }}&nbsp;&nbsp; 
                         <a href="#" @click="removeIndustry(industry)">
@@ -61,13 +64,16 @@
                         </a>
                     </UBadge>
                 </div>
-                <USelectMenu class="ml-4 mt-2 w-1/3" v-model="selectedIndustries" :options="industries" multiple placeholder="Industries" color="white" searchable searchable-placeholder="Search industry..." option-attribute="name">
+                <USelectMenu class="ml-4 mt-2 w-1/2 md:w-1/3" v-model="selectedIndustries" :options="industries" multiple placeholder="Industries" color="white" searchable searchable-placeholder="Search industry..." option-attribute="name">
                     <template #label>
                         <span>Industries</span>
                     </template>
                     <template #option-empty="{ query }">
                         <span v-if="!selectedIndustries.some(industry => industry.name.toLowerCase() === query.toLowerCase())" class="text-black cursor-pointer hover:underline" @click="createIndustry(query)">Add <q>{{ query }}</q></span>
                         <span v-else>&nbsp;</span>
+                    </template>
+                    <template #empty>
+                        Search or Add Industry
                     </template>
                 </USelectMenu>
             </div>
