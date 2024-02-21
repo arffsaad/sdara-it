@@ -1,5 +1,8 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
+  colorMode: {
+    preference: 'light'
+  },
   content: [
     "./components/**/*.{js,vue,ts}",
     "./layouts/**/*.vue",

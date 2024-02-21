@@ -7,9 +7,9 @@
                     class="bg-blackA3 inline-flex h-16 w-16 md:h-24 md:w-24 select-none items-center justify-center overflow-hidden rounded-full align-middle">
                     <AvatarImage class="h-full w-full rounded-[inherit] object-cover" :src=avatarURL alt="Colm Tuite" />
                     <AvatarFallback
-                        class="text-grass11 leading-1 flex h-full w-full items-center justify-center bg-white text-[15px] font-medium"
+                        class="text-grass11 leading-1 flex h-full w-full items-center justify-center bg-white text-lg font-medium"
                         :delay-ms="600">
-                        {{ user.value?.firstName.charAt(0) + user.value?.lastName.charAt(0) }}
+                        {{ user.firstName.charAt(0) + user.lastName.charAt(0) }}
                     </AvatarFallback>
                 </AvatarRoot>
             </div>
@@ -31,20 +31,17 @@
                 <h6 class="ml-4 mb-1">Profile Summary</h6>
                     <Editor class="block"/>
             </div>
-            <div class="w-full">
+            <div class="w-full grid grid-cols-1">
                 <h6 class="ml-4 mb-1">Skills</h6>
-                <div class="rounded-lg w-full bg-white px-4 py-3 flex flex-wrap">
-                    <h1 v-if="selectedSkills.length === 0">None Selected</h1>
-                    <UBadge v-for="skill in selectedSkills" :key="skill" class="mr-2 mb-2 rounded-full" color="cyan" variant="solid">
+                <div class='w-full flex flex-wrap'>
+                    <UBadge v-for="skill in selectedSkills" :key="skill" class="mr-2 mb-2 rounded-full" color="gray" variant="solid">
                         {{ skill.length > 7 ? skill.slice(0, 6) + '...' : skill }}&nbsp;&nbsp; 
-                        <a href="#" @click="console.log(selectedSkills.splice(selectedSkills.indexOf(skill), 1))">
+                        <a href="#" @click="selectedSkills.splice(selectedSkills.indexOf(skill), 1)">
                             <font-awesome-icon icon="fa-solid fa-xmark"/>
                         </a>
                     </UBadge>
                 </div>
-                <div class="w-1/4">
-                    <USelectMenu class="mt-2" v-model="selectedSkills" :options="skills" multiple placeholder="Skills" :popper="{ resize: true , strategy:'fixed' }"/>
-                </div>
+                <USelectMenu class="mx-4 mt-2" v-model="selectedSkills" :options="skills" multiple placeholder="Skills" color="white"/>
             </div>
             <div>
                 <h6 class="ml-4 mb-1">Industries</h6>
@@ -75,6 +72,8 @@ const selectedSkills = ref([]);
 const selectedIndustries = ref([]);
 const skills = ref([]);
 const industries = ref([]);
+
+
 
 const formData = reactive({
     fullName: '',
@@ -113,7 +112,6 @@ async function submitForm() {
 
 await useAsyncData(async (nuxtApp) => {
   await nuxtApp.$pb.collection('skills').getFullList().then((res) => {
-    console.log(res);
     skills.value = res.map((skill) => skill.name);
   });
 })
