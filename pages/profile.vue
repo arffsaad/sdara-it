@@ -1,7 +1,7 @@
 <template>
-    <div class="flex items-center justify-center h-screen w-screen bg-slate-100">
+    <div class="flex items-center justify-center h-full w-full bg-slate-100">
         <div
-            class="w-full bg-slate-100 rounded-lg shadow-2xl grid grid-cols-1 gap-y-3 px-8 md:px-12 py-8 mx-12 sm:mx-24 md:w-1/2 lg:w-1/2 xl:w-1/3">
+            class="w-full bg-slate-100 rounded-lg shadow-2xl grid grid-cols-1 gap-y-3 px-8 md:px-12 py-8 mx-12 my-10 sm:mx-24 md:w-1/2 lg:w-1/2 xl:w-1/3">
             <div class="grid grid-cols-1 justify-items-center">
                 <AvatarRoot
                     class="bg-blackA3 inline-flex h-16 w-16 md:h-24 md:w-24 select-none items-center justify-center overflow-hidden rounded-full align-middle">
@@ -94,7 +94,7 @@
                     class="border-2 border-slate-200 rounded-lg p-4 h-10 md:h-12 w-full bg-white">
             </div>
             <button @click.stop="submitForm"
-                class="update-button flex border-2 items-center justify-center border-slate-200 bg-slate-700 rounded-lg w-1/2 md:w-1/3 h-12 hover:bg-slate-900 text-white">
+                class="update-button flex border-2 items-center justify-center border-slate-200 bg-slate-700 rounded-lg w-1/2 md:w-1/2 h-12 hover:bg-slate-900 text-white">
                 <span class="spinner-button hidden">
                     <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none"
                         viewBox="0 0 24 24">

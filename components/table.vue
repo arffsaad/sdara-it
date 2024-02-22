@@ -1,6 +1,5 @@
 <script setup>
 const cookie = useCookie("pb_auth");
-const userId = ref(cookie.value?.model?.id);
 
 // ref for loading state
 const loading = ref(true);
@@ -17,8 +16,11 @@ watch(q, () => {
 
 const columns = [
   {
+    key: 'avatar',
+  },
+  {
     label: 'Name',
-    key: 'expand.user.fullName',
+    key: 'fullname',
     sortable: true,
   },
   {
@@ -45,9 +47,18 @@ await useLazyAsyncData(async (nuxtApp) => {
   // });
   await nuxtApp.$pb.collection('people').getFullList({
     expand: ['user,skills,industries'],
-    fields: ['*,expand.user.fullName,expand.user.email,expand.user.avatar,expand.skills.name,expand.industries.name'],
+    fields: ['*,expand.user.fullName,expand.user.email,expand.user.avatar,expand.user.id,expand.skills.name,expand.industries.name'],
   }).then((res) => {
-    people.value = res;
+    people.value = res.map((person) => {
+      return {
+        avatar: person.expand.user.id + "/" + person.expand.user.avatar,
+        fullname: person.expand.user.fullName,
+        nickname: person.nickname,
+        batch: person.batch,
+        linkedin: person.linkedin,
+      }
+    });
+    console.log(people.value)
     loading.value = false;
   });
 })
@@ -82,7 +93,7 @@ const filteredRows = computed(() => {
   <UTable :ui="{
     base: 'min-w-full table-fixed',
     th: {
-      color: 'text-black dark:text-black font-semibold uppercase'
+      color: 'text-black dark:text-black font-semibold'
     },
     td: {
       color: 'text-black dark:text-black'
@@ -94,7 +105,22 @@ const filteredRows = computed(() => {
       label: 'dark:text-black'
     },
   }" :columns="columns" :rows="filteredRows"
-    :empty-state="{ icon: 'i-heroicons-user-20-solid', label: emptyLabel }" :loading="loading" />
+    :empty-state="{ icon: 'i-heroicons-user-20-solid', label: emptyLabel }" :loading="loading">
+    <template #avatar-data="{ row }">
+      <AvatarRoot
+          class="bg-blackA3 inline-flex h-12 w-12 md:h-16 md:w-16 select-none items-center justify-center overflow-hidden rounded-full align-middle">
+        <AvatarImage class="h-full w-full rounded-[inherit] object-cover" :src='"https://sdaraapi.arfsd.cyou/api/files/users/" + row.avatar' />
+          <AvatarFallback
+              class="text-grass11 leading-1 flex h-full w-full items-center justify-center bg-white text-lg font-medium"
+              :delay-ms="600">
+              {{ "AB" }}
+          </AvatarFallback>
+      </AvatarRoot>
+    </template>
+    <template #linkedin-data="{ row }">
+      <a :href="row.linkedin" class="text-blue-700 hover:text-blue-300" target="_blank">{{ row.linkedin }}</a>
+    </template>
+  </UTable>
   <div class="flex justify-end px-3 py-3.5 border-t border-gray-200 dark:border-gray-700">
     <UPagination v-model="page" :page-count="pageCount" :total="totalItems" />
   </div>
