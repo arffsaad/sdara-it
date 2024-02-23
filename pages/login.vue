@@ -138,8 +138,10 @@ async function oauth(method) {
                         };
                         nuxtApp.$pb.collection('users').update(record, data);
                     }
+                    nuxtApp.$router.push('/profile');
+                } else {
+                    nuxtApp.$router.push('/');
                 }
-                nuxtApp.$router.push('/');
             })
         } catch (error) {
             open.value = false
