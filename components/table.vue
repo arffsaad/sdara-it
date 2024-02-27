@@ -232,7 +232,7 @@ function loadProfile(id) {
           </AvatarFallback>
         </AvatarRoot>
         <div class="flex flex-col items-center">
-          <h1 class="text-lg">{{ memberDetails.expand.user.fullName }} ({{ memberDetails.nickname }})</h1>
+          <h1 class="text-lg">{{ memberDetails.expand.user.fullName }} <span v-if="memberDetails.nickname != ''">({{ memberDetails.nickname }})</span></h1>
           <h2 class="text-sm text-gray-500 dark:text-gray-400">SDARA Class of {{ memberDetails.batch }}</h2>
         </div>
         <div class="flex flex-col items-center">
@@ -243,6 +243,7 @@ function loadProfile(id) {
               class="bg-gray-200 dark:bg-gray-800 text-gray-700 dark:text-gray-300 px-2 py-1 rounded-full">
               {{ skill.name }}
             </div>
+            <span v-if="!memberDetails.expand.skills && !memberLoading" class="text-gray-500 dark:text-gray-400">None Listed.</span>
           </div>
         </div>
         <div class="flex flex-col items-center">
@@ -253,6 +254,15 @@ function loadProfile(id) {
               class="bg-gray-200 dark:bg-gray-800 text-gray-700 dark:text-gray-300 px-2 py-1 rounded-full">
               {{ industry.name }}
             </div>
+            <span v-if="!memberDetails.expand.industries && !memberLoading" class="text-gray-500 dark:text-gray-400">None Listed.</span>
+          </div>
+        </div>
+        <div class="flex flex-col items-center">
+          <h1 class="text-lg">Summary</h1>
+          <div class="flex flex-wrap justify-center gap-2 px-4">
+            <USkeleton v-if="memberLoading" class="h-4 w-20" />
+            <p v-if="memberDetails.summary != ''" class="text-gray-500 dark:text-gray-400 text-sm" style="white-space: pre-line;">{{ memberDetails.summary }}</p>
+            <span v-else-if="!memberDetails.summary && !memberLoading" class="text-gray-500 dark:text-gray-400">Not Available.</span>
           </div>
         </div>
       </div>
