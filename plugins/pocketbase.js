@@ -1,7 +1,8 @@
 import PocketBase from 'pocketbase';
 
 export default defineNuxtPlugin(async () => {
-  const pb = new PocketBase('https://sdaraapi.arfsd.cyou');
+  const config = useRuntimeConfig();
+  const pb = new PocketBase(config.public.pbURL);
 
   const cookie = useCookie('pb_auth', {
     path:     '/',

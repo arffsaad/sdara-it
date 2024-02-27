@@ -18,7 +18,7 @@ export default defineNuxtRouteMiddleware((to) => {
 
   if (mustAuth.includes(to.path) && cookie.value?.token == "") {
     return "/login";
-  } else if (mustNotAuth.includes(to.path) && cookie.value?.token != "") {
+  } else if (mustNotAuth.includes(to.path) && cookie.value?.token != "" && cookie.value?.token != null) {
     return "/";
   } else {
     return;

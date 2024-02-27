@@ -3,15 +3,28 @@
         <div
             class="w-full bg-slate-100 rounded-lg shadow-2xl grid grid-cols-1 gap-y-3 px-8 md:px-12 py-8 mx-12 my-10 sm:mx-24 md:w-1/2 lg:w-1/2 xl:w-1/3">
             <div class="grid grid-cols-1 justify-items-center">
-                <AvatarRoot
-                    class="bg-blackA3 inline-flex h-16 w-16 md:h-24 md:w-24 select-none items-center justify-center overflow-hidden rounded-full align-middle">
-                    <AvatarImage class="h-full w-full rounded-[inherit] object-cover" :src=avatarURL alt="Colm Tuite" />
-                    <AvatarFallback
-                        class="text-grass11 leading-1 flex h-full w-full items-center justify-center bg-white text-lg font-medium"
-                        :delay-ms="600">
-                        {{ user.firstName.charAt(0) + user.lastName.charAt(0) }}
-                    </AvatarFallback>
-                </AvatarRoot>
+                <div class="relative group cursor-pointer">
+                    <AvatarRoot
+                        class="bg-blackA3 inline-flex h-16 w-16 md:h-24 md:w-24 select-none items-center justify-center overflow-hidden rounded-full align-middle" :key="avatarLoading">
+                        <AvatarImage class="h-full w-full rounded-[inherit] object-cover" v-bind:src=avatarURL />
+                        <AvatarFallback
+                            class="text-grass11 leading-1 flex h-full w-full items-center justify-center bg-white text-lg font-medium"
+                            :delay-ms="600">
+                            {{ user.firstName.charAt(0) + user.lastName.charAt(0) }}
+                        </AvatarFallback>
+                    </AvatarRoot>
+                    <div :class="'absolute top-0 left-0 h-full w-full rounded-full bg-opacity-90 bg-white text-xs flex items-center justify-center '+ (avatarLoading ? 'visible' : 'invisible')">
+                        <svg class="animate-spin h-5 w-5 text-black" xmlns="http://www.w3.org/2000/svg" fill="none"
+                            viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor"
+                                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                            </path>
+                        </svg>
+                    </div>
+                    <div class="absolute top-0 left-0 h-full w-full rounded-full bg-opacity-90 bg-white invisible group-hover:visible text-xs flex items-center justify-center" @click="openPicker">CHANGE</div>
+                    <input type="file" ref="imgInput" class="hidden" v-on:change="changeAvatar"/>
+                </div>
             </div>
             <div>
                 <h6 class="ml-4 mb-1">Full Name</h6>
@@ -29,7 +42,7 @@
                         class="border-2 border-slate-200 rounded-lg p-4 h-10 md:h-12 w-full bg-white">
                 </div>
                 <div>
-                    <h6 class="ml-4 mb-1">SDAR Graduate Year</h6>
+                    <h6 class="ml-4 mb-1">SDARA Batch</h6>
                     <input type="number" v-model="formData.batch" placeholder="2009" id="batch" name="batch"
                         class="border-2 border-slate-200 rounded-lg p-4 h-10 md:h-12 w-full bg-white">
                 </div>
@@ -135,7 +148,7 @@ useHead({
 
 const cookie = useCookie("pb_auth");
 const user = ref(cookie.value?.model);
-const avatarURL = 'https://sdaraapi.arfsd.cyou/api/files/users/' + user.value?.id + '/' + user.value?.avatar;
+const avatarURL = ref('https://sdaraapi.arfsd.cyou/api/files/users/' + user.value?.id + '/' + user.value?.avatar);
 const selectedSkills = ref([]);
 const selectedIndustries = ref([]);
 const skills = ref([]);
@@ -146,6 +159,8 @@ const loadingModal = ref(false);
 const toaster = ref(false);
 const toastMsg = ref('');
 const timerRef = ref(0)
+const imgInput = ref(null);
+const avatarLoading = ref(false);
 
 watch(selectedSkills, () => {
     refreshList();
@@ -154,6 +169,25 @@ watch(selectedSkills, () => {
 watch(selectedIndustries, () => {
     refreshList();
 });
+
+const openPicker = () => {
+    imgInput.value.click();
+}
+
+const changeAvatar = () => {
+    avatarLoading.value = true;
+    const file = imgInput.value.files[0];
+    const formData = new FormData();
+    formData.append('avatar', file);
+    useAsyncData(async (nuxtApp) => {
+        await nuxtApp.$pb.collection('users').update(user.value.id, formData).then((res) => {
+            avatarLoading.value = false;
+            avatarURL.value = 'https://sdaraapi.arfsd.cyou/api/files/users/' + res.id + '/' + res.avatar;
+            toastMsg.value = 'Avatar updated successfully!';
+            toaster.value = true;
+        }); 
+    });
+}
 
 function refreshList() {
     skills.value = skillsList.value.filter(skill => !selectedSkills.value.some(selectedSkill => selectedSkill.id === skill.id));
@@ -279,8 +313,6 @@ await useAsyncData(async (nuxtApp) => {
             await nuxtApp.$pb.collection('people').getFirstListItem('user="' + user.value.id + '"', {
                 expand: 'user,skills,industries',
             }).then((res) => {
-                console.log('test')
-                console.log(res)
                 formData.fullName = res.expand.user.fullName;
                 formData.nickname = res.nickname;
                 formData.linkedin = res.linkedin;
@@ -290,7 +322,6 @@ await useAsyncData(async (nuxtApp) => {
                 selectedIndustries.value = res.expand.industries.map((industry) => ({ id: industry.id, name: industry.name }));
             });
         } catch (error) {
-            console.log("user without profile")
             refreshList();
         }
     });

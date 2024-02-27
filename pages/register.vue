@@ -126,7 +126,9 @@ async function oauth(method) {
                         };
                         nuxtApp.$pb.collection('users').update(record, data);
                     }
-                    nuxtApp.$router.push('/profile');
+                    setTimeout(() => {
+                        nuxtApp.$router.push('/profile');
+                    }, 500);
                 } else {
                     nuxtApp.$router.push('/');
                 }

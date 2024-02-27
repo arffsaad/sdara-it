@@ -9,8 +9,9 @@
       <NuxtLink to="/about">About Us</NuxtLink>
       <NuxtLink to="/login" :class="(authed ? 'hidden' : '')">Sign In</NuxtLink>
       <NuxtLink to="/members" :class="(authed ? '' : 'hidden')">Members List</NuxtLink>
+      <NuxtLink to="/profile" :class="(authed ? '' : 'hidden')">Profile</NuxtLink>
       <div :class="'flex ml-auto ' + (authed ? '' : 'hidden')">
-        <a href="#" class="mr-4">Hi {{ useCookie("pb_auth").value?.model?.firstName
+        <a class="mr-4">Hi {{ useCookie("pb_auth").value?.model?.firstName
         }}!</a>
         <a href="#" @click="logout">Logout</a>
       </div>
@@ -33,6 +34,7 @@
         <NuxtLink @click="toggleMenu" to="/">Home</NuxtLink>
         <NuxtLink @click="toggleMenu" to="/about">About Us</NuxtLink>
         <NuxtLink :class="(authed ? 'hidden' : '')" @click="toggleMenu" to="/login">Sign In</NuxtLink>
+        <NuxtLink :class="(authed ? '' : 'hidden')" @click="toggleMenu" to="/profile">Profile</NuxtLink>
         <NuxtLink :class="(authed ? '' : 'hidden')" @click="toggleMenu" to="/members">Members List</NuxtLink>
         <a href="#" :class="(authed ? '' : 'hidden')" @click="logout">Logout</a>
       </div>
@@ -42,7 +44,6 @@
 
 <script setup lang="js">
 import { ref, watch } from 'vue';
-import { routerKey } from 'vue-router';
 
 // create state "menuOpen"
 const menuOpen = ref(false);

@@ -1,5 +1,5 @@
 <script setup>
-const cookie = useCookie("pb_auth");
+const user = useCookie("pb_auth").value.model;
 
 // ref for loading state
 const loading = ref(true);
@@ -138,7 +138,6 @@ function loadProfile(id) {
         }
       };
       memberLoading.value = false;
-      console.log(memberDetails.value)
     });
   });
 }
