@@ -1,0 +1,9 @@
+version: '3'
+services:
+  sdara-backend:
+    image: pocketbase:0.22
+    ports:
+      - 8547:8080
+    volumes:
+      - .\data:/pb/pb_data
+      - .\hooks:/pb/pb_hooks
