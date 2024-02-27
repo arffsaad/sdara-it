@@ -1,5 +1,8 @@
 export default defineNuxtRouteMiddleware((to) => {
   const cookie = useCookie("pb_auth");
+  if (!cookie.value) {
+    useCookie("pb_auth", {"token":"","model":null});
+  }
   
   // Add auth protected routes here
   const mustAuth = [

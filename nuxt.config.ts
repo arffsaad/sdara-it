@@ -8,6 +8,9 @@ export default defineNuxtConfig({
       autoprefixer: {},
     },
   },
+  colorMode: {
+    preference: 'light'
+  },
   modules: ['@nuxtjs/google-fonts', 'radix-vue/nuxt', '@nuxt/ui'],
   googleFonts: {
     families: {
